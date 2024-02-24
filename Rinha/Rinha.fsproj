@@ -7,16 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Services\Database.fs" />
-    <Compile Include="Transations.fs" />
-    <Compile Include="CreateDatabase.fs" />
-    <Compile Include="WeatherForecast.fs" />
-    <Compile Include="Controllers/WeatherForecastController.fs" />
+    <None Include="docker-compose.yml" />
+    <Compile Include="Controllers\TransationsController.fs" />
+    <Compile Include="Services\Database\Transations.fs" />
+    <Compile Include="Services\Database\Database.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Dockerfile" />
+    <None Include="init.sql" />
   </ItemGroup>
 
   <ItemGroup>

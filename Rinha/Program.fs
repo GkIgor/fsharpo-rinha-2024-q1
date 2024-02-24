@@ -1,5 +1,7 @@
 namespace Rinha
 #nowarn "20"
+open Npgsql
+
 open System
 open System.Collections.Generic
 open System.IO
@@ -16,7 +18,10 @@ open Microsoft.Extensions.Logging
 
 module Program =
     let exitCode = 0
+    let connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=rinha"
+    let connection = new NpgsqlConnection(connectionString)
 
+    connection.Open()
     [<EntryPoint>]
     let main args =
 
