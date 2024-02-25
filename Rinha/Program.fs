@@ -17,25 +17,24 @@ open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
 
 module Program =
+    let configureApp (app : IApplicationBuilder) =
+        app.UseForwardedHeaders()
+           .UseStaticFiles()
+           .UseRouting()
+           .UseAuthorization()
+           .UseEndpoints(fun endpoints -> endpoints.MapControllers() |> ignore)
+
+    let configureServices (services : IServiceCollection) =
+        services.AddControllers() |> ignore
+
     let exitCode = 0
-    let connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=rinha"
-    let connection = new NpgsqlConnection(connectionString)
 
-    connection.Open()
     [<EntryPoint>]
-    let main args =
-
+    let main args = 
         let builder = WebApplication.CreateBuilder(args)
-
-        builder.Services.AddControllers()
-
+        builder.Services |> configureServices
         let app = builder.Build()
-
-        app.UseHttpsRedirection()
-
-        app.UseAuthorization()
-        app.MapControllers()
+        app |> configureApp
 
         app.Run()
-
         exitCode

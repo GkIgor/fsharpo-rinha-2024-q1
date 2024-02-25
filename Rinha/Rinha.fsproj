@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Database\Database.fs" />
+    <Compile Include="Database\Transations.fs" />
     <None Include="docker-compose.yml" />
     <Compile Include="Controllers\TransationsController.fs" />
-    <Compile Include="Services\Database\Transations.fs" />
-    <Compile Include="Services\Database\Database.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
