@@ -1,13 +1,19 @@
 ﻿namespace Rinha.Controllers
 
 open Database.DatabaseQuerys
-open System
-open System.Collections.Generic
-open System.Linq
-open System.Threading.Tasks
 open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Logging
 
+type NewTransationRequest = {
+  valor: int
+  tipo: char
+  descricao: string
+}
+
+type NewTransationResponse = {
+limite: int
+saldo: int
+}
 
 [<ApiController>]
 [<Route("clientes")>]
@@ -21,7 +27,20 @@ type TransationsController (logger : ILogger<TransationsController>) =
     
     [<HttpPost("{id}/transacoes")>]
     member _.Post(id: int, value: int, type1: char, description) =
-      let mutable returnRequest = []
-      let newTransation = newTransaction id value type1 description
-      JsonResult(returnRequest)
+      if verifyClient id = 0 then
+        NotFoundResult("Cliente não encontrado")
+
+      let patternVerifyTransaction =
+        let verify = verifyTransaction id
+        let limit = getSaldo id
+        match verify with
+        | :? int as saldo -> saldo
+
+
+
+
+
+        
+      //let newTransation = newTransaction id value type1 description
+      //JsonResult("")
 

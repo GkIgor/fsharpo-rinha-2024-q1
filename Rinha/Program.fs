@@ -15,6 +15,7 @@ open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
+open Middlewares
 
 module Program =
     let configureApp (app : IApplicationBuilder) =
@@ -22,6 +23,7 @@ module Program =
            .UseStaticFiles()
            .UseRouting()
            .UseAuthorization()
+           .UseMiddleware<Middlewares>()
            .UseEndpoints(fun endpoints -> endpoints.MapControllers() |> ignore)
 
     let configureServices (services : IServiceCollection) =
