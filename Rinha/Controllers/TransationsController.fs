@@ -1,5 +1,6 @@
 ﻿namespace Rinha.Controllers
 
+open Microsoft.AspNetCore.Http
 open Database.DatabaseQuerys
 open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Logging
@@ -24,14 +25,14 @@ type TransationsController (logger : ILogger<TransationsController>) =
     member _.Get(id: int) =
       let user = getUserById(id)
       JsonResult(user.[0])
+
     
     [<HttpPost("{id}/transacoes")>]
     member _.Post(id: int, value: int, type1: char, description) =
       if verifyClient id = 0 then
-        NotFoundResult("Cliente não encontrado")
-
-      let patternVerifyTransaction =
-        let verify = verifyTransaction id
+        NotFoundResult() :> IActionResult
+      else
+        let verify = Database.verifyTransaction id
         let limit = getSaldo id
         match verify with
         | :? int as saldo -> saldo

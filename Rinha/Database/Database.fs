@@ -29,9 +29,39 @@ module public DatabaseQuerys =
 ", connection)
 
     select.Parameters.AddWithValue(":id", id) |> ignore
+    let reader = select.ExecuteReader()
+    let mutable result = 0
 
-    select.ExecuteScalar()
+    while reader.Read() do
+      result <- reader.GetInt32(0) - reader.GetInt32(1)
+    reader.Close()
+    result
 
+
+  let getLimit (id: int) =
+    let select = new NpgsqlCommand("SELECT limite FROM clientes WHERE id = :id", connection)
+
+    select.Parameters.AddWithValue(":id", id) |> ignore
+    let reader = select.ExecuteReader()
+    let mutable result = 0
+
+    while reader.Read() do
+      result <- reader.GetInt32(0)
+    reader.Close()
+    result
+
+  let updateSaldo (id: int) (saldo: int) =
+    let update = new NpgsqlCommand("UPDATE clientes SET limite = :saldo WHERE id = :id", connection)
+    update.Parameters.AddWithValue(":id", id) |> ignore
+    update.Parameters.AddWithValue(":saldo", saldo) |> ignore
+
+    let reader = update.ExecuteReader()
+    let mutable result = 0
+    while reader.Read() do
+      result <- reader.GetInt32(0)
+
+    reader.Close()
+      
 
   let newTransaction (id: int) (valor: int) (tipo: char) (descricao: string) =
     let insert = new NpgsqlCommand("INSERT INTO transacoes (cliente_id, valor, tipo, descricao) VALUES (:id, :valor, :tipo, :descricao);
