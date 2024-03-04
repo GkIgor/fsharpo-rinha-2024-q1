@@ -2,8 +2,8 @@
 
 open Microsoft.AspNetCore.Http
 
-type Middlewares() = 
-    member _.Invoke (context: HttpContext, next: RequestDelegate) = 
+type Middlewares(next: RequestDelegate) = 
+    member _.Invoke (context: HttpContext) = 
       let param = context.Request.RouteValues.["id"]
       let mutable id =
         match param with

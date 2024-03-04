@@ -6,12 +6,19 @@ open Database
 module Operations = 
   let debit (id: int) (value: int) =
     let saldo = DatabaseQuerys.getSaldo id
-    let limit = DatabaseQuerys.getLimit id
-    printfn "%A" saldo
-    if limit < value then
-      HttpStatusCode.BadRequest
+    if saldo - value < 0 then
+      -1
     else
-      let newSaldo = saldo - value
-      DatabaseQuerys.updateSaldo id newSaldo
-      HttpStatusCode.OK
+      let transation = DatabaseQuerys.newTransaction id value 'D' "Debito"
+      printf "Transacao realizada com sucesso %A" transation
+      transation
 
+  let credit (id: int) (value: int) =
+    let limite = DatabaseQuerys.getLimit id
+    let saldo = DatabaseQuerys.getSaldo id
+    if limite - saldo - value < 0 then
+      -1
+    else
+      let transation = DatabaseQuerys.newTransaction id value 'C' "Credito"
+      printf "Transacao realizada com sucesso %A" transation
+      transation

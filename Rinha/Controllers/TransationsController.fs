@@ -1,9 +1,14 @@
 ﻿namespace Rinha.Controllers
 
-open Microsoft.AspNetCore.Http
 open Database.DatabaseQuerys
 open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Logging
+
+open Transations.Operations
+open Microsoft.AspNetCore.Http
+open Microsoft.AspNetCore.Http.HttpResults
+open Microsoft.AspNetCore.Http
+open System.Net
 
 type NewTransationRequest = {
   valor: int
@@ -22,26 +27,25 @@ type TransationsController (logger : ILogger<TransationsController>) =
     inherit ControllerBase()
 
     [<HttpGet("{id}/transacoes")>]
-    member _.Get(id: int) =
+    member this.Get(id: int) =
       let user = getUserById(id)
       JsonResult(user.[0])
 
     
     [<HttpPost("{id}/transacoes")>]
-    member _.Post(id: int, value: int, type1: char, description) =
-      if verifyClient id = 0 then
-        NotFoundResult() :> IActionResult
-      else
-        let verify = Database.verifyTransaction id
-        let limit = getSaldo id
-        match verify with
-        | :? int as saldo -> saldo
+    member this.Post(id: int, value: int, type1: char) =
+      let operation = type1
+      match operation with
+      | 'D' -> 
+        let response = debit id value
+        match response with
+        | -1 -> this.BadRequest(response)
+        | _ -> this.Ok(response)
 
+      | 'C' -> 
+        let response = credit id value
+        match response with
+        | -1 -> this.BadRequest(response)
+        | _ -> this.Ok(response)
 
-
-
-
-        
-      //let newTransation = newTransaction id value type1 description
-      //JsonResult("")
-
+      | _ -> this.BadRequest("nada retornado")

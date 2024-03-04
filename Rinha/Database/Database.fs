@@ -3,7 +3,7 @@
 module public DatabaseQuerys =
   open Npgsql
 
-  let connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=postgres"
+  let [<Literal>] connectionString = "Host=localhost; Port=5432; Username=postgres; Password=postgres; Database=postgres"
   let connection = new NpgsqlConnection(connectionString)
   connection.Open()
 
